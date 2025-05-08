@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %}Return Details{% endblock %}
+{% block body %}
+    <h1>Return #{{ return.id }}</h1>
+    <p>Book: {{ return.bookIssue.book.title }}</p>
+    <p>Reader: {{ return.bookIssue.reader.name }}</p>
+    <p>Returned At: {{ return.returnedAt|date('Y-m-d H:i') }}</p>
+    <a href="{{ path('return_edit', {id: return.id}) }}">edit</a>
+    {{ include('return/_delete_form.html.twig') }}
+    <a href="{{ path('return_index') }}">back to list</a>
+{% endblock %}

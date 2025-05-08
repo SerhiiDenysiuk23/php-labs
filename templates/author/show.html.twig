@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}Author Details{% endblock %}
+{% block body %}
+    <h1>Author #{{ author.id }}</h1>
+    <p>Name: {{ author.name }}</p>
+    <a href="{{ path('author_edit', {id: author.id}) }}">edit</a>
+    {{ include('author/_delete_form.html.twig') }}
+    <a href="{{ path('author_index') }}">back to list</a>
+{% endblock %}

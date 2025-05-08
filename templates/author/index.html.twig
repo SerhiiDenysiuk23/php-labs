@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Authors{% endblock %}
+{% block body %}
+    <h1>Authors</h1>
+    <a href="{{ path('author_new') }}">Create new author</a>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for author in authors %}
+            <tr>
+                <td>{{ author.id }}</td>
+                <td>{{ author.name }}</td>
+                <td>
+                    <a href="{{ path('author_show', {id: author.id}) }}">show</a>
+                    <a href="{{ path('author_edit', {id: author.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

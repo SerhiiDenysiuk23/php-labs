@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block title %}Readers{% endblock %}
+{% block body %}
+    <h1>Readers</h1>
+    <a href="{{ path('reader_new') }}">Create new reader</a>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reader in readers %}
+            <tr>
+                <td>{{ reader.id }}</td>
+                <td>{{ reader.name }}</td>
+                <td>{{ reader.email }}</td>
+                <td>
+                    <a href="{{ path('reader_show', {id: reader.id}) }}">show</a>
+                    <a href="{{ path('reader_edit', {id: reader.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

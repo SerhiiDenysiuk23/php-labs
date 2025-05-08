@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block title %}Issue Details{% endblock %}
+{% block body %}
+    <h1>Issue #{{ issue.id }}</h1>
+    <p>Book: {{ issue.book.title }}</p>
+    <p>Reader: {{ issue.reader.name }}</p>
+    <p>Issued At: {{ issue.issuedAt|date('Y-m-d H:i') }}</p>
+    <a href="{{ path('issue_edit', {id: issue.id}) }}">edit</a>
+    {{ include('issue/_delete_form.html.twig') }}
+    <a href="{{ path('issue_index') }}">back to list</a>
+{% endblock %}

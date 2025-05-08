@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}Book Issues{% endblock %}
+{% block body %}
+    <h1>Book Issues</h1>
+    <a href="{{ path('issue_new') }}">Create new issue</a>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Book</th>
+            <th>Reader</th>
+            <th>Issued At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for issue in issues %}
+            <tr>
+                <td>{{ issue.id }}</td>
+                <td>{{ issue.book.title }}</td>
+                <td>{{ issue.reader.name }}</td>
+                <td>{{ issue.issuedAt|date('Y-m-d H:i') }}</td>
+                <td>
+                    <a href="{{ path('issue_show', {id: issue.id}) }}">show</a>
+                    <a href="{{ path('issue_edit', {id: issue.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block title %}Book Returns{% endblock %}
+{% block body %}
+<h1>Book Returns</h1>
+<a href="{{ path('return_new') }}">Create new return</a>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Book Issue</th>
+        <th>Returned At</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for return in returns %}
+        <tr>
+            <td>{{ return.id }}</td>
+            <td>{{ return.bookIssue.book.title }} to {{ return.bookIssue.reader.name }}</td>
+            <td>{{ return.returnedAt|date('Y-m-d H:i') }}</td>
+            <td>
+                <a href="{{ path('return_show', {id: return.id}) }}">show</a>
+                <a href="{{ path('return_edit', {id: return.id}) }}">edit</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}Reader Details{% endblock %}
+{% block body %}
+    <h1>Reader #{{ reader.id }}</h1>
+    <p>Name: {{ reader.name }}</p>
+    <p>Email: {{ reader.email }}</p>
+    <a href="{{ path('reader_edit', {id: reader.id}) }}">edit</a>
+    {{ include('reader/_delete_form.html.twig') }}
+    <a href="{{ path('reader_index') }}">back to list</a>
+{% endblock %}

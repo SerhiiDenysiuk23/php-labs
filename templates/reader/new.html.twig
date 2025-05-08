@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}New Reader{% endblock %}
+{% block body %}
+    <h1>Create Reader</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button>Save</button>
+    {{ form_end(form) }}
+    <a href="{{ path('reader_index') }}">back to list</a>
+{% endblock %}
