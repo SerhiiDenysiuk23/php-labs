@@ -2,6 +2,19 @@
 {% block title %}Authors{% endblock %}
 {% block body %}
     <h1>Authors</h1>
+    <form method="GET" class="mb-3">
+        <label for="itemsPerPage">Show per page:</label>
+        <select name="itemsPerPage" id="itemsPerPage"
+                onchange="this.form.submit()"
+                class="form-select w-auto d-inline-block ms-2">
+            {% for n in allowed %}
+                <option value="{{ n }}" {{ itemsPerPage == n ? 'selected' : '' }}>
+                    {{ n }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
     <a href="{{ path('author_new') }}">Create new author</a>
     <table border="1" cellpadding="5" cellspacing="0">
         <thead>
@@ -12,7 +25,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for author in authors %}
+        {% for author in pagination %}
             <tr>
                 <td>{{ author.id }}</td>
                 <td>{{ author.name }}</td>

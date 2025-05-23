@@ -1,29 +1,41 @@
 {% extends 'base.html.twig' %}
 {% block title %}Book Returns{% endblock %}
 {% block body %}
-<h1>Book Returns</h1>
-<a href="{{ path('return_new') }}">Create new return</a>
-<table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Book Issue</th>
-        <th>Returned At</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for return in returns %}
+    <h1>Book Returns</h1>
+    <form method="GET" class="mb-3">
+        <label for="itemsPerPage">Show per page:</label>
+        <select name="itemsPerPage" id="itemsPerPage"
+                onchange="this.form.submit()"
+                class="form-select w-auto d-inline-block ms-2">
+            {% for n in allowed %}
+                <option value="{{ n }}" {{ itemsPerPage == n ? 'selected' : '' }}>
+                    {{ n }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+    <a href="{{ path('return_new') }}">Create new return</a>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
         <tr>
-            <td>{{ return.id }}</td>
-            <td>{{ return.bookIssue.book.title }} to {{ return.bookIssue.reader.name }}</td>
-            <td>{{ return.returnedAt|date('Y-m-d H:i') }}</td>
-            <td>
-                <a href="{{ path('return_show', {id: return.id}) }}">show</a>
-                <a href="{{ path('return_edit', {id: return.id}) }}">edit</a>
-            </td>
+            <th>ID</th>
+            <th>Book Issue</th>
+            <th>Returned At</th>
+            <th>Actions</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for return in pagination %}
+            <tr>
+                <td>{{ return.id }}</td>
+                <td>{{ return.bookIssue.book.title }} to {{ return.bookIssue.reader.name }}</td>
+                <td>{{ return.returnedAt|date('Y-m-d H:i') }}</td>
+                <td>
+                    <a href="{{ path('return_show', {id: return.id}) }}">show</a>
+                    <a href="{{ path('return_edit', {id: return.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

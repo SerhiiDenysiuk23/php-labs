@@ -2,6 +2,18 @@
 {% block title %}Readers{% endblock %}
 {% block body %}
     <h1>Readers</h1>
+    <form method="GET" class="mb-3">
+        <label for="itemsPerPage">Show per page:</label>
+        <select name="itemsPerPage" id="itemsPerPage"
+                onchange="this.form.submit()"
+                class="form-select w-auto d-inline-block ms-2">
+            {% for n in allowed %}
+                <option value="{{ n }}" {{ itemsPerPage == n ? 'selected' : '' }}>
+                    {{ n }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
     <a href="{{ path('reader_new') }}">Create new reader</a>
     <table border="1" cellpadding="5" cellspacing="0">
         <thead>
@@ -13,7 +25,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for reader in readers %}
+        {% for reader in pagination %}
             <tr>
                 <td>{{ reader.id }}</td>
                 <td>{{ reader.name }}</td>

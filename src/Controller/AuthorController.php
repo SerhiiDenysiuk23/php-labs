@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Author;
 use App\Form\AuthorTypeForm;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -13,13 +14,38 @@ use Symfony\Component\HttpFoundation\Request;
 #[Route('/authors')]
 final class AuthorController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $em) {}
+    public function __construct(
+        private EntityManagerInterface $em,
+        private PaginatorInterface   $paginator     // <— впровадити сервіс
+    ) {}
 
     #[Route('/', name: 'author_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $authors = $this->em->getRepository(Author::class)->findAll();
-        return $this->render('author/index.html.twig', ['authors' => $authors]);
+        // 1) Отримуємо QueryBuilder по сутності
+        $qb = $this->em->getRepository(Author::class)
+            ->createQueryBuilder('a');
+
+        // 2) Скільки на сторінці?
+        $itemsPerPage = $request->query->getInt('itemsPerPage', 10);
+        $allowed = [5,10,25,50,100];
+        if (!in_array($itemsPerPage, $allowed)) {
+            $itemsPerPage = 10;
+        }
+
+        // 3) Пагінація
+        $pagination = $this->paginator->paginate(
+            $qb,                                  // QueryBuilder
+            $request->query->getInt('page', 1),   // номер сторінки
+            $itemsPerPage                         // елементів на сторінці
+        );
+
+        // 4) Рендер
+        return $this->render('author/index.html.twig', [
+            'pagination'   => $pagination,
+            'itemsPerPage' => $itemsPerPage,
+            'allowed'      => $allowed,
+        ]);
     }
 
     #[Route('/new', name: 'author_new', methods: ['GET', 'POST'])]
