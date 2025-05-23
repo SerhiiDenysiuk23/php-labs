@@ -8,12 +8,27 @@ use Illuminate\Http\Request;
 
 class BookReturnController extends Controller
 {
-    public function index()
+    
+    
+    
+    public function index(Request $request)
     {
-        $returns = BookReturn::with('bookIssue.book', 'bookIssue.reader')
-            ->paginate(15);
-        return view('returns.index', compact('returns'));
+        // Pagination setup
+        $perPage = $request->input('per_page', 10);
+        $allowed = [5, 10, 25, 50, 100];
+        if (!in_array($perPage, $allowed)) {
+            $perPage = 10;
+        }
+
+        // Query with pagination
+        $returns = BookReturn::with(['bookIssue.book', 'bookIssue.reader'])->paginate($perPage)
+            ->appends(['per_page' => $perPage]);
+
+        return view('returns.index', compact('returns', 'perPage', 'allowed'));
     }
+    
+    
+    
 
     public function create()
     {

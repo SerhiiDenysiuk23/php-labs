@@ -8,11 +8,27 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    public function index()
+    
+    
+    
+    public function index(Request $request)
     {
-        $books = Book::with('author')->paginate(15);
-        return view('books.index', compact('books'));
+        // Pagination setup
+        $perPage = $request->input('per_page', 10);
+        $allowed = [5, 10, 25, 50, 100];
+        if (!in_array($perPage, $allowed)) {
+            $perPage = 10;
+        }
+
+        // Query with pagination
+        $books = Book::with(['author'])->paginate($perPage)
+            ->appends(['per_page' => $perPage]);
+
+        return view('books.index', compact('books', 'perPage', 'allowed'));
     }
+    
+    
+    
 
     public function create()
     {

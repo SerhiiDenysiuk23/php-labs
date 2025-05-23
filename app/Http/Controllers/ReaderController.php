@@ -7,11 +7,27 @@ use Illuminate\Http\Request;
 
 class ReaderController extends Controller
 {
-    public function index()
+    
+    
+    
+    public function index(Request $request)
     {
-        $readers = Reader::all();
-        return view('readers.index', compact('readers'));
+        // Pagination setup
+        $perPage = $request->input('per_page', 10);
+        $allowed = [5, 10, 25, 50, 100];
+        if (!in_array($perPage, $allowed)) {
+            $perPage = 10;
+        }
+
+        // Query with pagination
+        $readers = Reader::paginate($perPage)
+            ->appends(['per_page' => $perPage]);
+
+        return view('readers.index', compact('readers', 'perPage', 'allowed'));
     }
+    
+    
+    
 
     public function create()
     {

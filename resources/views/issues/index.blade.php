@@ -2,6 +2,14 @@
 
 @section('content')
     <h1>Issues</h1>
+  <form method="GET" class="mb-3">
+    <label for="per_page">Show per page:</label>
+    <select name="per_page" id="per_page" onchange="this.form.submit()" class="form-select w-auto d-inline-block ms-2">
+      @foreach($allowed as $n)
+        <option value="{{ $n }}" {{ $perPage == $n ? 'selected' : '' }}>{{ $n }}</option>
+      @endforeach
+    </select>
+  </form>
     <a href="{{ route('issues.create') }}">+ New Issue</a>
     <table border="1" cellpadding="5" cellspacing="0">
         <thead>
@@ -33,4 +41,5 @@
         @endforeach
         </tbody>
     </table>
+  <div>{{ $issues->links() }}</div>
 @endsection

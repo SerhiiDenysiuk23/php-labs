@@ -7,11 +7,27 @@ use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
-    public function index()
+
+
+
+    public function index(Request $request)
     {
-        $authors = Author::all();
-        return view('authors.index', compact('authors'));
+        // Pagination setup
+        $perPage = $request->input('per_page', 10);
+        $allowed = [5, 10, 25, 50, 100];
+        if (!in_array($perPage, $allowed)) {
+            $perPage = 10;
+        }
+
+        // Query with pagination
+        $authors = Author::paginate($perPage)
+            ->appends(['per_page' => $perPage]);
+
+        return view('authors.index', compact('authors', 'perPage', 'allowed'));
     }
+
+
+
 
     public function create()
     {
