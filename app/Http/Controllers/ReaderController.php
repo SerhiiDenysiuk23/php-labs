@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 
 class ReaderController extends Controller
 {
-    
-    
-    
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->authorizeResource(Reader::class, 'reader');
+    }
+
     public function index(Request $request)
     {
         // Pagination setup
@@ -25,9 +29,9 @@ class ReaderController extends Controller
 
         return view('readers.index', compact('readers', 'perPage', 'allowed'));
     }
-    
-    
-    
+
+
+
 
     public function create()
     {

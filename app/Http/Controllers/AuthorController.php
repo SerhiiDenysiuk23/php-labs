@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->authorizeResource(Author::class, 'author');
+    }
 
 
     public function index(Request $request)

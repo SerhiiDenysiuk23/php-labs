@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    
-    
-    
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->authorizeResource(Book::class, 'book');
+    }
+
+
     public function index(Request $request)
     {
         // Pagination setup
@@ -26,9 +30,9 @@ class BookController extends Controller
 
         return view('books.index', compact('books', 'perPage', 'allowed'));
     }
-    
-    
-    
+
+
+
 
     public function create()
     {

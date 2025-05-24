@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 
 class BookReturnController extends Controller
 {
-    
-    
-    
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->authorizeResource(BookReturn::class, 'return');
+    }
+
+
     public function index(Request $request)
     {
         // Pagination setup
@@ -26,9 +30,9 @@ class BookReturnController extends Controller
 
         return view('returns.index', compact('returns', 'perPage', 'allowed'));
     }
-    
-    
-    
+
+
+
 
     public function create()
     {
