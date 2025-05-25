@@ -10,8 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/authors')]
+#[Route('/api/authors', name: 'api_authors_')]
 final class AuthorController extends AbstractController
 {
     public function __construct(
@@ -20,6 +21,7 @@ final class AuthorController extends AbstractController
     ) {}
 
     #[Route('/', name: 'author_index', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function index(Request $request): Response
     {
         // 1) Отримуємо QueryBuilder по сутності
@@ -49,6 +51,7 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/new', name: 'author_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function new(Request $request): Response
     {
         $author = new Author();
@@ -65,12 +68,14 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/{id}', name: 'author_show', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function show(Author $author): Response
     {
         return $this->render('author/show.html.twig', ['author' => $author]);
     }
 
     #[Route('/{id}/edit', name: 'author_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function edit(Request $request, Author $author): Response
     {
         $form = $this->createForm(AuthorTypeForm::class, $author);
@@ -85,6 +90,7 @@ final class AuthorController extends AbstractController
     }
 
     #[Route('/{id}', name: 'author_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Author $author): Response
     {
         if ($this->isCsrfTokenValid('delete'.$author->getId(), $request->request->get('_token'))) {

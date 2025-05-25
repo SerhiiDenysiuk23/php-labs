@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/readers')]
 final class ReaderController extends AbstractController
@@ -20,6 +21,7 @@ final class ReaderController extends AbstractController
     ) {}
 
     #[Route('/', name: 'reader_index', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function index(Request $request): Response
     {
         // 1) Отримуємо QueryBuilder по сутності
@@ -49,6 +51,7 @@ final class ReaderController extends AbstractController
     }
 
     #[Route('/new', name: 'reader_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function new(Request $request): Response
     {
         $reader = new Reader();
@@ -65,12 +68,14 @@ final class ReaderController extends AbstractController
     }
 
     #[Route('/{id}', name: 'reader_show', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function show(Reader $reader): Response
     {
         return $this->render('reader/show.html.twig', ['reader' => $reader]);
     }
 
     #[Route('/{id}/edit', name: 'reader_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function edit(Request $request, Reader $reader): Response
     {
         $form = $this->createForm(ReaderTypeForm::class, $reader);
@@ -85,6 +90,7 @@ final class ReaderController extends AbstractController
     }
 
     #[Route('/{id}', name: 'reader_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Reader $reader): Response
     {
         if ($this->isCsrfTokenValid('delete'.$reader->getId(), $request->request->get('_token'))) {

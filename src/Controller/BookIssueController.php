@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/issues')]
 final class BookIssueController extends AbstractController
@@ -20,6 +21,7 @@ final class BookIssueController extends AbstractController
     ) {}
 
     #[Route('/', name: 'issue_index', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function index(Request $request): Response
     {
         // 1) Отримуємо QueryBuilder по сутності
@@ -49,6 +51,7 @@ final class BookIssueController extends AbstractController
     }
 
     #[Route('/new', name: 'issue_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function new(Request $request): Response
     {
         $issue = new BookIssue();
@@ -65,12 +68,14 @@ final class BookIssueController extends AbstractController
     }
 
     #[Route('/{id}', name: 'issue_show', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function show(BookIssue $issue): Response
     {
         return $this->render('issue/show.html.twig', ['issue' => $issue]);
     }
 
     #[Route('/{id}/edit', name: 'issue_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function edit(Request $request, BookIssue $issue): Response
     {
         $form = $this->createForm(BookIssueTypeForm::class, $issue);
@@ -85,6 +90,7 @@ final class BookIssueController extends AbstractController
     }
 
     #[Route('/{id}', name: 'issue_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, BookIssue $issue): Response
     {
         if ($this->isCsrfTokenValid('delete'.$issue->getId(), $request->request->get('_token'))) {

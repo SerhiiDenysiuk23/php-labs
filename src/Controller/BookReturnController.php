@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/returns')]
 final class BookReturnController extends AbstractController
@@ -20,6 +21,7 @@ final class BookReturnController extends AbstractController
     ) {}
 
     #[Route('/', name: 'return_index', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function index(Request $request): Response
     {
         // 1) Отримуємо QueryBuilder по сутності
@@ -49,6 +51,7 @@ final class BookReturnController extends AbstractController
     }
 
     #[Route('/new', name: 'return_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function new(Request $request): Response
     {
         $bookReturn = new BookReturn();
@@ -65,12 +68,14 @@ final class BookReturnController extends AbstractController
     }
 
     #[Route('/{id}', name: 'return_show', methods: ['GET'])]
+    #[IsGranted('ROLE_CLIENT')]
     public function show(BookReturn $return): Response
     {
         return $this->render('return/show.html.twig', ['return' => $return]);
     }
 
     #[Route('/{id}/edit', name: 'return_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_MANAGER')]
     public function edit(Request $request, BookReturn $return): Response
     {
         $form = $this->createForm(BookReturnTypeForm::class, $return);
@@ -85,6 +90,7 @@ final class BookReturnController extends AbstractController
     }
 
     #[Route('/{id}', name: 'return_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, BookReturn $return): Response
     {
         if ($this->isCsrfTokenValid('delete'.$return->getId(), $request->request->get('_token'))) {
